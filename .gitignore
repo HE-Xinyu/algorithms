@@ -343,3 +343,4 @@ healthchecksdb
 *.vcxproj
 *.vcxproj.filters
 *.sln
+*.config
