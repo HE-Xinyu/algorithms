@@ -1,14 +1,19 @@
 #include <vector>
 #include <queue>
 #include <iostream>
+#include <list>
+#include <iterator>
 
 using std::vector;
 using std::pair;
 using std::queue;
+using std::list;
 using std::fill;
 using std::min;
 using std::cout;
 using std::endl;
+using std::next;
+
 
 template<typename Flow>
 class MaxFlowBase {
@@ -29,7 +34,7 @@ class EdmondsKarp : public MaxFlowBase<Flow> {
 public:
 	EdmondsKarp(vector<vector<int>> _adj, vector<vector<Flow>> _cap, int _s, int _t) : MaxFlowBase<Flow>(_adj, _cap, _s, _t) {}
 	
-	Flow compute() {
+	Flow compute() override {
 		Flow ret = 0;
 		size_t n = this->cap.size();
 
@@ -116,23 +121,33 @@ public:
 		 * the start vertex will have height of n.
 		 * make (s, u) have zero residual capacity.
 		 */
-		height[_s] = n;
+		height[_s] = static_cast<int>(n);
 		for (int v : _adj[_s]) {
 			preFlow[_s][v] += _cap[_s][v];
 			excess[v] += _cap[_s][v];
 		}
 	}
 
+	Flow c_f(int u, int v) {
+		/*
+		 * Return the residual flow of the edge (u, v).
+		 */
+
+		return this->cap[u][v] - preFlow[u][v] + preFlow[v][u];
+	}
+
 	void push(int u, int v) {
 		/*
 		 * h(u) = h(v) + 1, and edge (u, v) has residual capacity.
 		 * Push flow from u to v as much as we can.
+		 * Caller should gaurantee that the PUSH is valid.
 		 *
 		 * The time complexity is O(1).
 		 * 
 		 * We apply a simple greedy strategy: first decrease f(v, u) as much as we can, then increase f(u, v).
 		 */
-		Flow amount = min(this->cap[u][v] - preFlow[u][v] + preFlow[v][u], excess[u]);
+
+		Flow amount = min(c_f(u, v), excess[u]);
 		excess[u] -= amount;
 		excess[v] += amount;
 		Flow amountDecrease = min(amount, preFlow[v][u]);
@@ -143,6 +158,7 @@ public:
 	void relabel(int u) {
 		/*
 		 * Do a relabel on u.
+		 * Caller should gaurantee that the RELABEL is valid.
 		 * 
 		 * Find the lowest vertex v satisfying c_f(u, v) > 0
 		 * It should be guaranteed that such v exists, and h(u) <= h(v) for all v before relabel.
@@ -154,11 +170,71 @@ public:
 
 		int mn = INT_MAX;
 		for (int v : this->adj[u]) {
-			if (this->cap[u][v] - preFlow[u][v] + preFlow[v][u] > 0) {
+			if (c_f(u, v) > 0) {
 				mn = min(mn, height[v]);
 			}
 		}
 
 		height[u] = mn + 1;
+	}
+};
+
+
+template<typename Flow>
+class PushToFront : public GeneralPushRelabel<Flow> {
+public:
+	PushToFront(vector<vector<int>> _adj, vector<vector<Flow>> _cap, int _s, int _t) : GeneralPushRelabel<Flow>(_adj, _cap, _s, _t) {}
+	
+	bool discharge(int u) {
+		/*
+		 * Do a DISCHARGE on vertex u.
+		 * 
+		 * return whether it does a RELABEL.
+		 *
+		 */
+
+		int v = 0;
+		bool is_relabeled = false;
+		int idx = 0;
+		while (this->excess[u] > 0) {
+			if (idx == this->adj[u].size()) {
+				this->relabel(u);
+				is_relabeled = true;
+				idx = 0;
+			}
+			else {
+				int v = this->adj[u][idx];
+				if (this->c_f(u, v) > 0 && this->height[u] == this->height[v] + 1) {
+					this->push(u, v);
+				}
+				idx++;
+			}
+		}
+		return is_relabeled;
+	}
+
+	Flow compute() override {
+		/*
+		 * full routine.
+		 */
+
+		list<int> l;
+		size_t n = this->cap.size();
+		// insert all vertices except the end vertex into the list.
+		for (int i = 0; i < n; i++) {
+			if (i != this->t) {
+				l.push_back(i);
+			}
+		}
+		list<int>::iterator iter = l.begin();
+		while (iter != l.end()) {
+			bool is_relabeled = discharge(*iter);
+			if (is_relabeled) {
+				// move the current vertex to the front
+				l.splice(l.begin(), l, iter, next(iter));
+			}
+			iter++;
+		}
+		return this->excess[this->t];
 	}
 };
