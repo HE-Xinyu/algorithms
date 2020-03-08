@@ -3,6 +3,7 @@
 #include <iostream>
 #include <list>
 #include <iterator>
+#pragma once
 
 using std::vector;
 using std::pair;

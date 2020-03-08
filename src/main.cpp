@@ -1,6 +1,7 @@
 ﻿#include <iostream>
 #include <vector>
 #include "max_flow.hpp"
+#include "matching.hpp"
 
 using namespace std;
 
@@ -16,4 +17,9 @@ int main()
 	cap[1][2] = 15.1;
 	PushToFront<double> PTF(adj, cap, 0, 3);
 	std::cout << PTF.compute() << endl;
+
+	vector<pair<int, int>> e = { {0, 1}, {1, 3}, {4, 2}, {4, 5} };
+	MaximumBipartiteMatching MBP(e);
+	cout << e.size() << " " << MBP.compute() << endl;
+
 }
