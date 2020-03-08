@@ -33,7 +33,7 @@ public:
 		flow = vector<vector<Flow>>(n, vector<Flow>(n, 0));
 	}
 
-	Flow c_f(int u, int v) const {
+	inline Flow c_f(int u, int v) const {
 		/*
 		 * Return the residual flow of the edge (u, v).
 		 */
@@ -43,7 +43,7 @@ public:
 
 	virtual Flow compute() = 0;
 
-	vector<vector<Flow>> getFlow() const {
+	inline vector<vector<Flow>> getFlow() const {
 		return flow;
 	}
 };
