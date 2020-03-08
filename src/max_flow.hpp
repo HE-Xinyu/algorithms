@@ -144,7 +144,7 @@ public:
 		}
 	}
 
-	void push(int u, int v) {
+	inline void push(int u, int v) {
 		/*
 		 * h(u) = h(v) + 1, and edge (u, v) has residual capacity.
 		 * Push flow from u to v as much as we can.
