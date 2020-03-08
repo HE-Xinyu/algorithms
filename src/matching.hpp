@@ -17,9 +17,9 @@ public:
      */
     vector<pair<int, int>> e;
     
-    MaximumBipartiteMatching(vector<pair<int, int>> _e) : e(_e) {}
+    explicit MaximumBipartiteMatching(vector<pair<int, int>> _e) : e(_e) {}
 
-    int compute() {
+    int compute() const {
         /*
          * Calculate the maximum matching using the Edmonds-Karp (Ford-Fulkerson) algorithm 
          * 
@@ -90,5 +90,4 @@ public:
         EdmondsKarp<int> EK(adj, cap, s, t);
         return EK.compute();
     }
-
 };
