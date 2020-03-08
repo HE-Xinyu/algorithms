@@ -15,13 +15,13 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="matching.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="max_flow.hpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
