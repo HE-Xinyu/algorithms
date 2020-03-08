@@ -34,11 +34,9 @@ cd algorithms
 
 
 ## Done
-Chapter 26: Maximum Flow (`max_flow.cpp`): Edmonds-Karp algorithm, relabel-to-front algorithm.
+Chapter 26: Maximum Flow (`max_flow.cpp`): Edmonds-Karp algorithm, relabel-to-front algorithm, maximum bipartite algorithm.
 
 ## TODO
-Chapter 26: Maximum bipartite matching
-
 Chapter 24: SSSP
 
 Minimum-cost perfect matching (I didn't find it on the book)
