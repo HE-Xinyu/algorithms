@@ -152,7 +152,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="matching.cpp" />
-    <ClCompile Include="max_flow.cpp" />
+    <ClCompile Include="max_flow.hpp" />
     <ClCompile Include="src.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

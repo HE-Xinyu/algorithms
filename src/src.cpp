@@ -1,6 +1,6 @@
 ﻿#include <iostream>
 #include <vector>
-#include "max_flow.cpp"
+#include "max_flow.hpp"
 
 using namespace std;
 

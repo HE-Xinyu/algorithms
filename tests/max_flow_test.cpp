@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "../src/max_flow.cpp"
+#include "../src/max_flow.hpp"
 
 TEST(MaxFlowTest, BasicTest) {
 	int n = 4;
