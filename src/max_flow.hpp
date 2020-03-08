@@ -23,17 +23,35 @@ protected:
 	vector<vector<int>> adj;
 	// n * n capacity vertex (non-negative)
 	vector<vector<Flow>> cap;
+	// n * n flow vertex (which we concern most)
+	vector<vector<Flow>> flow;
 	// start vertex and end vertex
 	int s, t;
 public:
-	MaxFlowBase(vector<vector<int>> _adj, vector<vector<Flow>> _cap, int _s, int _t) : adj(_adj), cap(_cap), s(_s), t(_t) {}
+	explicit MaxFlowBase(vector<vector<int>> _adj, vector<vector<Flow>> _cap, int _s, int _t) : adj(_adj), cap(_cap), s(_s), t(_t) {
+		size_t n = cap.size();
+		flow = vector<vector<Flow>>(n, vector<Flow>(n, 0));
+	}
+
+	Flow c_f(int u, int v) const {
+		/*
+		 * Return the residual flow of the edge (u, v).
+		 */
+
+		return cap[u][v] - flow[u][v] + flow[v][u];
+	}
+
 	virtual Flow compute() = 0;
+
+	vector<vector<Flow>> getFlow() const {
+		return flow;
+	}
 };
 
 template<typename Flow>
 class EdmondsKarp : public MaxFlowBase<Flow> {
 public:
-	EdmondsKarp(vector<vector<int>> _adj, vector<vector<Flow>> _cap, int _s, int _t) : MaxFlowBase<Flow>(_adj, _cap, _s, _t) {}
+	explicit EdmondsKarp(vector<vector<int>> _adj, vector<vector<Flow>> _cap, int _s, int _t) : MaxFlowBase<Flow>(_adj, _cap, _s, _t) {}
 	
 	Flow compute() override {
 		Flow ret = 0;
@@ -41,13 +59,13 @@ public:
 
 		// -1 for unvisited vertices.
 		// allocate it outside of the while loop to save memory allocation time
-		vector<int> step(n, -1);
+		vector<bool> visited(n, false);
 		vector<int> prev(n, -1);
 		while (true) {
 			bool foundAugPath = false;
 			// no need to reset prev array, since we only use it to record the path
-			fill(step.begin(), step.end(), -1);
-			step[this->s] = 0;
+			fill(visited.begin(), visited.end(), false);
+			visited[this->s] = true;
 			queue<int> q;
 			q.push(this->s);
 
@@ -61,9 +79,9 @@ public:
 				}
 
 				for (int next : this->adj[cur]) {
-					if (this->cap[cur][next] && step[next] == -1) {
+					if (this->c_f(cur, next) && !visited[next]) {
 						// (cur, next) has positive capacity and 'next' is not visited
-						step[next] = step[cur] + 1;
+						visited[next] = true;
 						prev[next] = cur;
 						q.push(next);
 					}
@@ -76,10 +94,10 @@ public:
 				// first pass to compute the augment value
 				while (prev[cur] != -1) {
 					if (augValue != -1) {
-						augValue = min(augValue, this->cap[prev[cur]][cur]);
+						augValue = min(augValue, this->c_f(prev[cur], cur));
 					}
 					else {
-						augValue = this->cap[prev[cur]][cur];
+						augValue = this->c_f(prev[cur], cur);
 					}
 					cur = prev[cur];
 				}
@@ -89,8 +107,7 @@ public:
 				cur = this->t;
 				// second pass to update the capacity matrix
 				while (prev[cur] != -1) {
-					this->cap[prev[cur]][cur] -= augValue;
-					this->cap[cur][prev[cur]] += augValue;
+					this->flow[prev[cur]][cur] += augValue;
 					cur = prev[cur];
 				}
 			}
@@ -106,15 +123,13 @@ public:
 template<typename Flow>
 class GeneralPushRelabel : public MaxFlowBase<Flow> {
 protected:
-	// (f, h) instance
-	vector<vector<Flow>> preFlow;
+	// (f, h) instance, f is already defined in base class.
 	vector<int> height;
 	// save the excess amount to save computation cost
 	vector<Flow> excess;
 public:
-	GeneralPushRelabel(vector<vector<int>> _adj, vector<vector<Flow>> _cap, int _s, int _t) : MaxFlowBase<Flow>(_adj, _cap, _s, _t) {
+	explicit GeneralPushRelabel(vector<vector<int>> _adj, vector<vector<Flow>> _cap, int _s, int _t) : MaxFlowBase<Flow>(_adj, _cap, _s, _t) {
 		size_t n = _cap.size();
-		preFlow = vector<vector<Flow>>(n, vector<Flow>(n, 0));
 		height = vector<int>(n, 0);
 		excess = vector<Flow>(n, 0);
 		/*
@@ -124,17 +139,9 @@ public:
 		 */
 		height[_s] = static_cast<int>(n);
 		for (int v : _adj[_s]) {
-			preFlow[_s][v] += _cap[_s][v];
+			this->flow[_s][v] += _cap[_s][v];
 			excess[v] += _cap[_s][v];
 		}
-	}
-
-	Flow c_f(int u, int v) {
-		/*
-		 * Return the residual flow of the edge (u, v).
-		 */
-
-		return this->cap[u][v] - preFlow[u][v] + preFlow[v][u];
 	}
 
 	void push(int u, int v) {
@@ -148,12 +155,12 @@ public:
 		 * We apply a simple greedy strategy: first decrease f(v, u) as much as we can, then increase f(u, v).
 		 */
 
-		Flow amount = min(c_f(u, v), excess[u]);
+		Flow amount = min(this->c_f(u, v), excess[u]);
 		excess[u] -= amount;
 		excess[v] += amount;
-		Flow amountDecrease = min(amount, preFlow[v][u]);
-		preFlow[v][u] -= amountDecrease;
-		preFlow[u][v] += (amount - amountDecrease);
+		Flow amountDecrease = min(amount, this->flow[v][u]);
+		this->flow[v][u] -= amountDecrease;
+		this->flow[u][v] += (amount - amountDecrease);
 	}
 
 	void relabel(int u) {
@@ -171,7 +178,7 @@ public:
 
 		int mn = INT_MAX;
 		for (int v : this->adj[u]) {
-			if (c_f(u, v) > 0) {
+			if (this->c_f(u, v) > 0) {
 				mn = min(mn, height[v]);
 			}
 		}
@@ -184,7 +191,7 @@ public:
 template<typename Flow>
 class PushToFront : public GeneralPushRelabel<Flow> {
 public:
-	PushToFront(vector<vector<int>> _adj, vector<vector<Flow>> _cap, int _s, int _t) : GeneralPushRelabel<Flow>(_adj, _cap, _s, _t) {}
+	explicit PushToFront(vector<vector<int>> _adj, vector<vector<Flow>> _cap, int _s, int _t) : GeneralPushRelabel<Flow>(_adj, _cap, _s, _t) {}
 	
 	bool discharge(int u) {
 		/*
