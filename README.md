@@ -36,6 +36,8 @@ cd algorithms
 ## Done
 Chapter 26: Maximum Flow (`max_flow.cpp`): Edmonds-Karp algorithm, relabel-to-front algorithm, maximum bipartite algorithm.
 
+Chapter 24: Bellman Ford algorithm
+
 ## TODO
 Chapter 30: FFT
 
