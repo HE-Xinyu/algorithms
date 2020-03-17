@@ -1,22 +1,21 @@
-#include <vector>
-#include <queue>
 #include <iostream>
-#include <list>
 #include <iterator>
+#include <list>
+#include <queue>
+#include <vector>
 #pragma once
 
-using std::vector;
-using std::pair;
-using std::queue;
-using std::list;
-using std::fill;
-using std::min;
 using std::cout;
 using std::endl;
+using std::fill;
+using std::list;
+using std::min;
 using std::next;
+using std::pair;
+using std::queue;
+using std::vector;
 
-
-template<typename Flow>
+template <typename Flow>
 class MaxFlowBase {
 protected:
 	// adjacency list
@@ -27,8 +26,11 @@ protected:
 	vector<vector<Flow>> flow;
 	// start vertex and end vertex
 	int s, t;
+
 public:
-	explicit MaxFlowBase(vector<vector<int>> _adj, vector<vector<Flow>> _cap, int _s, int _t) : adj(_adj), cap(_cap), s(_s), t(_t) {
+	explicit MaxFlowBase(vector<vector<int>> _adj, vector<vector<Flow>> _cap,
+		int _s, int _t)
+		: adj(_adj), cap(_cap), s(_s), t(_t) {
 		size_t n = cap.size();
 		flow = vector<vector<Flow>>(n, vector<Flow>(n, 0));
 	}
@@ -43,16 +45,16 @@ public:
 
 	virtual Flow compute() = 0;
 
-	inline vector<vector<Flow>> getFlow() const {
-		return flow;
-	}
+	inline vector<vector<Flow>> getFlow() const { return flow; }
 };
 
-template<typename Flow>
+template <typename Flow>
 class EdmondsKarp : public MaxFlowBase<Flow> {
 public:
-	explicit EdmondsKarp(vector<vector<int>> _adj, vector<vector<Flow>> _cap, int _s, int _t) : MaxFlowBase<Flow>(_adj, _cap, _s, _t) {}
-	
+	explicit EdmondsKarp(vector<vector<int>> _adj, vector<vector<Flow>> _cap,
+		int _s, int _t)
+		: MaxFlowBase<Flow>(_adj, _cap, _s, _t) {}
+
 	Flow compute() override {
 		Flow ret = 0;
 		size_t n = this->cap.size();
@@ -119,16 +121,18 @@ public:
 	}
 };
 
-
-template<typename Flow>
+template <typename Flow>
 class GeneralPushRelabel : public MaxFlowBase<Flow> {
 protected:
 	// (f, h) instance, f is already defined in base class.
 	vector<int> height;
 	// save the excess amount to save computation cost
 	vector<Flow> excess;
+
 public:
-	explicit GeneralPushRelabel(vector<vector<int>> _adj, vector<vector<Flow>> _cap, int _s, int _t) : MaxFlowBase<Flow>(_adj, _cap, _s, _t) {
+	explicit GeneralPushRelabel(vector<vector<int>> _adj,
+		vector<vector<Flow>> _cap, int _s, int _t)
+		: MaxFlowBase<Flow>(_adj, _cap, _s, _t) {
 		size_t n = _cap.size();
 		height = vector<int>(n, 0);
 		excess = vector<Flow>(n, 0);
@@ -151,8 +155,9 @@ public:
 		 * Caller should gaurantee that the PUSH is valid.
 		 *
 		 * The time complexity is O(1).
-		 * 
-		 * We apply a simple greedy strategy: first decrease f(v, u) as much as we can, then increase f(u, v).
+		 *
+		 * We apply a simple greedy strategy: first decrease f(v, u) as much as we
+		 * can, then increase f(u, v).
 		 */
 
 		Flow amount = min(this->c_f(u, v), excess[u]);
@@ -167,12 +172,13 @@ public:
 		/*
 		 * Do a relabel on u.
 		 * Caller should gaurantee that the RELABEL is valid.
-		 * 
+		 *
 		 * Find the lowest vertex v satisfying c_f(u, v) > 0
-		 * It should be guaranteed that such v exists, and h(u) <= h(v) for all v before relabel.
+		 * It should be guaranteed that such v exists, and h(u) <= h(v) for all v
+		 * before relabel.
 		 *
 		 * Update h(u) = h(v) + 1
-		 * 
+		 *
 		 * Time complexity: O(d(u))
 		 */
 
@@ -187,16 +193,17 @@ public:
 	}
 };
 
-
-template<typename Flow>
+template <typename Flow>
 class PushToFront : public GeneralPushRelabel<Flow> {
 public:
-	explicit PushToFront(vector<vector<int>> _adj, vector<vector<Flow>> _cap, int _s, int _t) : GeneralPushRelabel<Flow>(_adj, _cap, _s, _t) {}
-	
+	explicit PushToFront(vector<vector<int>> _adj, vector<vector<Flow>> _cap,
+		int _s, int _t)
+		: GeneralPushRelabel<Flow>(_adj, _cap, _s, _t) {}
+
 	bool discharge(int u) {
 		/*
 		 * Do a DISCHARGE on vertex u.
-		 * 
+		 *
 		 * return whether it does a RELABEL.
 		 *
 		 */
