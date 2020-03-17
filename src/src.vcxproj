@@ -155,6 +155,9 @@
     <ClCompile Include="matching.hpp" />
     <ClCompile Include="max_flow.hpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="shortest_paths.hpp" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
