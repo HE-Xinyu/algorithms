@@ -21,5 +21,4 @@ int main()
 	vector<pair<int, int>> e = { {0, 1}, {1, 3}, {4, 2}, {4, 5} };
 	MaximumBipartiteMatching MBP(e);
 	cout << e.size() << " " << MBP.compute() << endl;
-
 }
