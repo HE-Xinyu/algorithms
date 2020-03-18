@@ -2,6 +2,7 @@
 #include <vector>
 #include "max_flow.hpp"
 #include "matching.hpp"
+#include "fft.hpp"
 
 using namespace std;
 
