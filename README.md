@@ -41,7 +41,7 @@ Chapter 24: Bellman Ford algorithm
 ## TODO
 Chapter 30: FFT
 
-Chapter 24: SSSP
+Chapter 24: SSSP & APSP
 
 Minimum-cost perfect matching (I didn't find it on the book)
 
