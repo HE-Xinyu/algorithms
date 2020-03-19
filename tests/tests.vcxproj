@@ -36,6 +36,7 @@
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="fft_test.cpp" />
     <ClCompile Include="matching_test.cpp" />
     <ClCompile Include="max_flow_test.cpp" />
     <ClCompile Include="pch.cpp">
