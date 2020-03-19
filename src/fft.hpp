@@ -1,15 +1,15 @@
+#define _USE_MATH_DEFINES
 #include <complex>
 #include <cfloat>
 #include <vector>
 #include <cmath>
+#include <math.h>
 
 namespace fft {
 	using std::vector;
 	using std::exp;
 	using Complex = std::complex<double>;
 	using ComplexIterator = vector<Complex>::iterator;
-
-	constexpr auto M_PI = 3.14159265358979323846;
 
 	class Polynomial {
 	private:
