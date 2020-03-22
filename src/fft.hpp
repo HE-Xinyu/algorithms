@@ -15,6 +15,7 @@ namespace fft {
 	using std::cout;
 	using std::endl;
 	using std::max;
+	using std::swap;
 
 	class Polynomial {
 	private:
@@ -50,6 +51,23 @@ namespace fft {
 				*(begin + i) = temp[i];
 			}
 		}
+
+		// https://oi-wiki.org/math/poly/fft/
+		void bit_reverse() {
+			size_t n = coef.size();
+			vector<int> reverse(n, 0);
+			for (size_t i = 0; i < n; i++) {
+				reverse[i] = reverse[i >> 1] >> 1;
+				if (i & 1) {
+					reverse[i] |= (n >> 1);
+				}
+			}
+			for (size_t i = 0; i < n; i++) {
+				if (i < reverse[i]) {
+					swap(coef[i], coef[reverse[i]]);
+				}
+			}
+		}
 	public:
 		vector<Complex> coef;
 		// padding coef with zeros to achieve size of 2^k. 
@@ -72,6 +90,24 @@ namespace fft {
 			dft_recursive_internal(coef.begin(), coef.end(), sign);
 		}
 
+		void dft(int sign) {
+			size_t n = coef.size();
+			bit_reverse();
+			for (size_t k = 2; k <= n; k <<= 1) {
+				Complex step = exp(Complex(0, 1) * (2 * M_PI * sign / k));
+				for (size_t j = 0; j < n; j += k) {
+					Complex cur(1, 0);
+					for (size_t i = j; i < j + k / 2; i++) {
+						Complex u = coef[i];
+						Complex t = cur * coef[i + k / 2];
+						coef[i] = u + t;
+						coef[i + k / 2] = u - t;
+						cur *= step;
+					}
+				}
+			}
+		}
+
 		void scale() {
 			size_t n = coef.size();
 			for (auto& num : coef) {
@@ -86,18 +122,17 @@ namespace fft {
 
 			size_t len = max(coef.size(), rhs.coef.size()) * 2;
 		
-			cout << len << endl;
 			coef.resize(len);
 			rhs.coef.resize(len);
 
-			dft_recursive(1);
-			rhs.dft_recursive(1);
+			dft(1);
+			rhs.dft(1);
 
 			for (int i = 0; i < len; i++) {
 				coef[i] *= rhs.coef[i];
 			}
 
-			dft_recursive(-1);
+			dft(-1);
 			scale();
 
 			return *this;
