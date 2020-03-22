@@ -1,8 +1,10 @@
 #define _USE_MATH_DEFINES
+#include <algorithm>
 #include <complex>
 #include <cfloat>
 #include <vector>
 #include <cmath>
+#include <iostream>
 #include <math.h>
 
 namespace fft {
@@ -10,6 +12,9 @@ namespace fft {
 	using std::exp;
 	using Complex = std::complex<double>;
 	using ComplexIterator = vector<Complex>::iterator;
+	using std::cout;
+	using std::endl;
+	using std::max;
 
 	class Polynomial {
 	private:
@@ -47,20 +52,18 @@ namespace fft {
 		}
 	public:
 		vector<Complex> coef;
-		// _coef must be a power of 2.
+		// padding coef with zeros to achieve size of 2^k. 
 		Polynomial(vector<Complex> _coef) : coef(_coef) {
 			size_t n = coef.size();
 			if (n == 0) {
 				// not allowing empty vector.
 				throw;
 			}
-			while (n != 1) {
-				if (n & 1) {
-					// n is not 2^m
-					throw;
-				}
-				n >>= 1;
+			size_t new_size = 1;
+			while (new_size < n) {
+				new_size <<= 1;
 			}
+			coef.resize(new_size);
 		};
 
 		void dft_recursive(int sign) {
@@ -75,5 +78,30 @@ namespace fft {
 				num /= static_cast<Complex>(n);
 			}
 		}
+
+		Polynomial& operator*=(Polynomial& rhs) {
+			/*
+			 * NOTE: For saving space, rhs can be modified.
+			 */
+
+			size_t len = max(coef.size(), rhs.coef.size()) * 2;
+		
+			cout << len << endl;
+			coef.resize(len);
+			rhs.coef.resize(len);
+
+			dft_recursive(1);
+			rhs.dft_recursive(1);
+
+			for (int i = 0; i < len; i++) {
+				coef[i] *= rhs.coef[i];
+			}
+
+			dft_recursive(-1);
+			scale();
+
+			return *this;
+		}
 	};
+
 } // namespace fft

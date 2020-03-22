@@ -25,17 +25,22 @@ int main()
 
 	using fft::Complex;
 
-	vector<Complex> coef(4);
-	coef[0] = { 1, 0 };
-	coef[1] = { 2, 0 };
-	coef[2] = { 3, 0 };
-	coef[3] = { 4, 0 };
-
+	n = 5;
+	vector<Complex> coef(n);
+	for (int i = 0; i < n; i++) {
+		coef[i] = { i + 1.0, 0 };
+	}
+	cout << "GG" << endl;
 	fft::Polynomial poly(coef);
-	poly.dft_recursive(1);
-	poly.dft_recursive(-1);
-	poly.scale();
-	for (int i = 0; i < 4; i++) {
+	
+	fft::Polynomial poly2(coef);
+	cout << "Hi" << endl;
+
+	poly *= poly2;
+	cout << "Hello" << endl;
+	for (int i = 0; i < 16; i++) {
 		cout << real(poly.coef[i]) << " " << imag(poly.coef[i]) << endl;
 	}
+
+
 }
