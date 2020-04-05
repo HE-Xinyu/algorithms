@@ -31,6 +31,10 @@ public:
          * We denote the bipartite sets of vertices as X and Y. Suppose X + Y is continuous and starting from 0.
          * We have source vertex s = |X| + |Y|, t = |X| + |Y| + 1.
          * We add (s, x) and (y, t) to the graph, each having capacity 1.
+         * 
+         * It is guaranteed that if the input edges ((x_1, y_1), (x_2, y_2), ..., (x_n, y_n)) can be separated by 
+         * X = unique(x_1, x_2, ... x_n}), Y = unique({y_1, y_2, ... y_n}), 
+         * the algorithm will make the desired separation.
          */
         unordered_set<int> X, Y;
 
