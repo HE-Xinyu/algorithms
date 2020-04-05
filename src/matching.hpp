@@ -9,17 +9,19 @@ using std::unordered_set;
 
 class MaximumBipartiteMatching {
 public:
+    using Edges = vector<pair<int, int>>;
+
     /*
      * elements are edges (u, v) in E.
      *
      * It does not need to be (x, y). (y, x) is also fine.
      * The index should be continuous.
      */
-    vector<pair<int, int>> e;
+    Edges e;
     
-    explicit MaximumBipartiteMatching(vector<pair<int, int>> _e) : e(_e) {}
+    explicit MaximumBipartiteMatching(Edges _e) : e(_e) {}
 
-    int compute() const {
+    Edges compute() const {
         /*
          * Calculate the maximum matching using the Edmonds-Karp (Ford-Fulkerson) algorithm 
          * 
@@ -88,6 +90,20 @@ public:
         }
 
         EdmondsKarp<int> EK(adj, cap, s, t);
-        return EK.compute();
+        EK.compute();
+
+        vector<vector<int>> flow = EK.getFlow();
+
+        Edges ret;
+        for (int x: X) {
+            for (int y: Y) {
+                if (flow[x][y]) {
+                    cout << x << " " << y << " " << flow[x][y] << endl;
+                    ret.push_back({ x, y });
+                }
+            }
+        }
+
+        return ret;
     }
 };

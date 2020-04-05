@@ -19,9 +19,9 @@ int main()
 	PushToFront<double> PTF(adj, cap, 0, 3);
 	std::cout << PTF.compute() << endl;
 
-	vector<pair<int, int>> e = { {0, 1}, {1, 3}, {4, 2}, {4, 5} };
+	vector<pair<int, int>> e = { {0, 1}, {1, 3}, {0, 2}, {4, 5}, {3, 5} };
 	MaximumBipartiteMatching MBP(e);
-	cout << e.size() << " " << MBP.compute() << endl;
+	cout << MBP.compute().size() << endl;
 
 	using fft::Complex;
 

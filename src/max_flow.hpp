@@ -28,11 +28,25 @@ protected:
 	int s, t;
 
 public:
+
 	explicit MaxFlowBase(vector<vector<int>> _adj, vector<vector<Flow>> _cap,
 		int _s, int _t)
 		: adj(_adj), cap(_cap), s(_s), t(_t) {
 		size_t n = cap.size();
 		flow = vector<vector<Flow>>(n, vector<Flow>(n, 0));
+	}
+
+	inline void add(int u, int v, Flow amount) {
+		/* 
+		 * add 'amount' to edge (u, v)
+		 * if flow(v, u) > 0, we should decrease flow(v, u) first.
+		 * 
+		 * NOTE: it is similar to push() in PushToRelabel.
+		 */
+
+		Flow amountToDecrease = min(amount, flow[v][u]);
+		flow[v][u] -= amountToDecrease;
+		flow[u][v] += amount - amountToDecrease;
 	}
 
 	inline Flow c_f(int u, int v) const {
@@ -109,7 +123,7 @@ public:
 				cur = this->t;
 				// second pass to update the capacity matrix
 				while (prev[cur] != -1) {
-					this->flow[prev[cur]][cur] += augValue;
+					this->add(prev[cur], cur, augValue);
 					cur = prev[cur];
 				}
 			}
