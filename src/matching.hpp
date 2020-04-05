@@ -98,7 +98,6 @@ public:
         for (int x: X) {
             for (int y: Y) {
                 if (flow[x][y]) {
-                    cout << x << " " << y << " " << flow[x][y] << endl;
                     ret.push_back({ x, y });
                 }
             }
