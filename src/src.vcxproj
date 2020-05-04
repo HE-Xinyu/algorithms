@@ -156,6 +156,7 @@
     <ClCompile Include="max_flow.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="debug_utils.hpp" />
     <ClInclude Include="fft.hpp" />
     <ClInclude Include="shortest_paths.hpp" />
   </ItemGroup>

@@ -32,5 +32,8 @@
     <ClInclude Include="fft.hpp">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="debug_utils.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

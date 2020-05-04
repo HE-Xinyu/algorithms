@@ -30,17 +30,12 @@ int main()
 	for (int i = 0; i < n; i++) {
 		coef[i] = { i + 1.0, 0 };
 	}
-	cout << "GG" << endl;
 	fft::Polynomial poly(coef);
 	
 	fft::Polynomial poly2(coef);
-	cout << "Hi" << endl;
 
 	poly *= poly2;
-	cout << "Hello" << endl;
 	for (int i = 0; i < 16; i++) {
 		cout << real(poly.coef[i]) << " " << imag(poly.coef[i]) << endl;
 	}
-
-
 }
