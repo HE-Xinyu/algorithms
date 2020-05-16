@@ -16,7 +16,7 @@ My development environment is [Visual Studio 2019](https://visualstudio.microsof
 git clone https://github.com/HE-Xinyu/algorithms.git
 cd algorithms
 ```
-2. The code is in `src` folder, and the tests is in `tests`.
+2. The source code is in `src` folder, and the tests are in `tests`.
 3. If you want to try something out, simply modify anything you want and then compile and build.
 4. For running Google test, if you open `algorithms.sln` with Visual Studio 2017 or later, it should be directly runnable [(here are the instructions)](https://docs.microsoft.com/en-us/visualstudio/test/how-to-use-google-test-for-cpp?view=vs-2019). For other IDEs, you may need to setup Google test on your own.
 
