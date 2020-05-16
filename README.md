@@ -34,11 +34,15 @@ cd algorithms
 
 
 ## Done
-Chapter 30: DFT & IDFT
+Chapter 30: DFT & IDFT (`fft.hpp`)
 
-Chapter 26: Maximum Flow (`max_flow.cpp`): Edmonds-Karp algorithm, relabel-to-front algorithm, maximum bipartite algorithm.
+Chapter 26: Maximum Flow (`max_flow.hpp`): Edmonds-Karp algorithm, relabel-to-front algorithm, maximum bipartite algorithm (`matching.hpp`).
 
-Chapter 24: Bellman Ford algorithm
+Chapter 24: Bellman Ford algorithm (`shortest_paths.hpp`)
+
+Outside the book:
+
+1. trie (`string.hpp`)
 
 ## TODO
 Chapter 30: FFT
