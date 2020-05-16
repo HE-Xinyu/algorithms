@@ -159,6 +159,7 @@
     <ClInclude Include="debug_utils.hpp" />
     <ClInclude Include="fft.hpp" />
     <ClInclude Include="shortest_paths.hpp" />
+    <ClInclude Include="string.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

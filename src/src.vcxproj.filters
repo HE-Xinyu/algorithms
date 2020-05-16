@@ -35,5 +35,8 @@
     <ClInclude Include="debug_utils.hpp">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="string.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

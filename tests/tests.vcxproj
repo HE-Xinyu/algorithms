@@ -46,6 +46,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="shortest_paths_test.cpp" />
+    <ClCompile Include="trie_test.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\src\src.vcxproj">
