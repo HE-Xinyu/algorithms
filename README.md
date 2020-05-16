@@ -1,5 +1,5 @@
 # algorithms
-Implementations for algorithms in CLRS and UTAustin CS388G (online) course in C++11.
+Implementations for algorithms in CLRS and UTAustin CS388G (online) course in C++11, as well as algorithms that I found interesting.
 
 ## Introduction
 [CLRS](https://en.wikipedia.org/wiki/Introduction_to_Algorithms) is an excellent algorithm book in great depth. It covers a huge range of different algorithms, and some of them can be difficult to understand and implement.
@@ -22,9 +22,9 @@ cd algorithms
 
 ## Goals
 1. The code should achieve optimal time complexity.
-2. The code should be as clear as possible, even if it sacrifices some constant factor (e.g. use the stl library).
+2. The code should be as clear as possible, even if it sacrifices some constant factor (e.g. using the std library for convenience).
 3. DRY (don't repeat yourself)
-4. The code should be easy to use as well. By simply copying and pasting one should expect it working on any C++11 environment.
+4. The code should be easy to use as well. By simply copying and pasting, one should expect it working on any C++11 (and higher) environment.
 5. There should be thorough tests to show that the code works correctly.
 6. The code should work on 32-bit/64-bit Windows, Linux, and maxOS without modification.
 
@@ -45,8 +45,6 @@ Outside the book:
 1. trie (`string.hpp`)
 
 ## TODO
-Chapter 30: FFT
-
 Chapter 24: SSSP & APSP
 
 Minimum-cost perfect matching (I didn't find it on the book)
